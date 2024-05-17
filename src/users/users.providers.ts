@@ -1,8 +1,8 @@
 import { Mongoose } from 'mongoose';
-import { userSchema } from './schemas/user.schema';
+import { userSchema } from './schemas/users.schema';
 
 
-export const authProviders = [
+export const usersProviders = [
     {
         provide:'USER_MODEL',
         useFactory:(mongoose:Mongoose) => mongoose.model('User',userSchema),
