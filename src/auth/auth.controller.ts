@@ -13,11 +13,13 @@ import {
 import { AuthService } from "./auth.service";
 import { SignInDto } from "./dto/signIn.dto";
 import { AuthGuard } from "./auth.guard";
+import { Public } from "./decorators/public.decorator";
 
 @Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @HttpCode(HttpStatus.OK)
   @Post("login")
   async signIn(
@@ -33,7 +35,7 @@ export class AuthController {
     });
   }
 
-  @UseGuards(AuthGuard)
+  
   @Get('profile')
   async getProfile(@Req() req) {
     return req.user;
