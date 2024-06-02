@@ -15,7 +15,10 @@ export const userSchema = new mongoose.Schema({
   authority: [
     {
       pool_name:String,
-      pool_role:String
+      pool_role:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Role'
+      }
     }
   ]
 });

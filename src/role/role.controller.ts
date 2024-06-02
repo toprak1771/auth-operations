@@ -9,11 +9,11 @@ export class RoleController {
   @Post()
   async create(@Body() CreateRoleDto:CreateRoleDto,@Req() request,@Res() res,@Next() next) {
     try {
-      const _role = await this.roleService.create(CreateRoleDto);
+      //const _role = await this.roleService.create(CreateRoleDto);
      
       return res.status(200).json({
         status:'success',
-        data:_role
+        //data:_role
       })
     } catch (error) {
       return res.status(500).json({
