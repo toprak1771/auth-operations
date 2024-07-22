@@ -7,13 +7,13 @@ import {
   Next,
   Inject,
   Get,
+  Put,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
-import { CreateUserDto } from "./dto/create-user.dto";
+import { CreateUserDto, UpdateUserDto } from "./dto/create-user.dto";
 import { RoleService } from "src/role/role.service";
 import { Public } from "src/auth/decorators/public.decorator";
 import * as mongoose from "mongoose";
-
 
 @Controller("users")
 export class UsersController {
@@ -39,7 +39,12 @@ export class UsersController {
         createUserDto,
         transactionSession,
       );
-
+      //  const roleObject = {
+      //    name:'denemedeneme',
+      //    value:'sad'
+      //  };
+      //  const _role = await this.roleService.create(roleObject,transactionSession);
+      //  console.log("role:",_role);
       await transactionSession.commitTransaction();
 
       return res.status(200).json({
@@ -65,4 +70,24 @@ export class UsersController {
     const users = await this.usersService.getAll();
     res.send(users);
   }
+
+  @Put()
+  async updateUser(@Body() updateUserDto:UpdateUserDto,@Req() request, @Res() res, @Next() next){
+    try {
+      
+      const updatedUser = await this.usersService.update(updateUserDto);
+      
+      return res.status(200).json({
+        data: {
+          updatedUser: updatedUser,
+        },
+      });
+    } catch (error) {
+      return res.status(500).json({
+        status: "error",
+        error: error.message,
+      });
+    }
+  }
+
 }

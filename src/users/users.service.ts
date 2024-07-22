@@ -3,7 +3,7 @@ import { User } from "./interfaces/users.interface";
 import { Model } from "mongoose";
 import * as mongoose from 'mongoose';
 import * as bcrypt from "bcrypt";
-import { CreateUserDto } from "./dto/create-user.dto";
+import { CreateUserDto,UpdateUserDto } from "./dto/create-user.dto";
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -28,13 +28,20 @@ export class UsersService {
   }
 
   async findOne(_username:string): Promise<User[]> {
-    const user= await this.userModel.find({username:_username}).exec();
+    const user= await this.userModel.find({username:_username}).populate('authority.pool_role').exec();
     return user;
   }
   
   async getAll():Promise<any> {
     const users = await this.userModel.find().populate('authority.pool_role');
     return users;
+  }
+
+  async update(UpdateUserDto: UpdateUserDto): Promise<User> {
+    const updatedUser = await this.userModel.findOneAndUpdate({_id:UpdateUserDto.id},UpdateUserDto, {
+      new:true
+    });
+    return updatedUser;
   }
 }
 

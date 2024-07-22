@@ -1,16 +1,5 @@
-import { SetMetadata, Injectable } from "@nestjs/common";
-import { RoleService } from "../role.service";
+import { SetMetadata } from '@nestjs/common';
+import { Role } from '../enum/role.enum';
 
-@Injectable()
-export class RolesDecoratorFactory {
-  constructor(private readonly rolesService: RoleService) {}
-
-  async createRolesDecorator():Promise<(...roles:string[]) => void> {
-    const ROLES_KEY = 'roles';
-    const roles = await this.rolesService.getAllRoles();
-    console.log("roles:",roles);
-    const roleNames = roles.map(role => role.name);
-    return (...roles :string[]) => SetMetadata(ROLES_KEY,roles.length ? roles: roleNames);
-  }
-  
-}
+export const ROLES_KEY = 'roles';
+export const Roles = (...roles: Role[]) => SetMetadata(ROLES_KEY, roles);
