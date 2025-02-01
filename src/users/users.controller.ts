@@ -10,6 +10,7 @@ import {
   Put,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
+import { RabbitMQService } from "src/services/rabbitmq_service";
 import { CreateUserDto, UpdateUserDto } from "./dto/create-user.dto";
 import { RoleService } from "src/role/role.service";
 import { Public } from "src/auth/decorators/public.decorator";
@@ -18,6 +19,7 @@ import * as mongoose from "mongoose";
 @Controller("users")
 export class UsersController {
   constructor(
+    private readonly rabbitMQService:RabbitMQService,
     private readonly usersService: UsersService,
     private readonly roleService: RoleService,
     @Inject("DATABASE_CONNECTION")
@@ -45,7 +47,11 @@ export class UsersController {
       //  };
       //  const _role = await this.roleService.create(roleObject,transactionSession);
       //  console.log("role:",_role);
+      
       await transactionSession.commitTransaction();
+ 
+      const sendQueueRabbitMQ:boolean = await this.rabbitMQService.sendMessage('create-user',_user);
+      if(sendQueueRabbitMQ == true) console.log("Send message to queue.")
 
       return res.status(200).json({
         data: {

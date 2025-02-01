@@ -1,11 +1,13 @@
 import { Body, Controller, Post, Req, Res, Next,Get,Inject } from '@nestjs/common';
+import { RabbitMQService } from 'src/services/rabbitmq_service';
 import { RoleService } from './role.service';
 import { CreateRoleDto } from './dto/create_role.dto';
 import * as mongoose from "mongoose";
 
 @Controller('role')
 export class RoleController {
-  constructor(private readonly roleService: RoleService,@Inject("DATABASE_CONNECTION") private readonly connection:mongoose.Connection) {}
+  constructor(private readonly roleService: RoleService,@Inject("DATABASE_CONNECTION") private readonly connection:mongoose.Connection,private readonly rabbitMQService:RabbitMQService,) {}
+  
 
   @Post()
   async create(@Body() CreateRoleDto:CreateRoleDto,@Req() request,@Res() res,@Next() next) {
